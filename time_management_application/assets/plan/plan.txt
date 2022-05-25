@@ -1,0 +1,4 @@
+Step 1:
+Create Dash Board.
+    1: Create a Card Widget for each screen page which will navigate to 
+        respective screen.
