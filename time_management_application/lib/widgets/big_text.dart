@@ -25,3 +25,4 @@ class BigTextWidget extends StatelessWidget {
     );
   }
 }
+  

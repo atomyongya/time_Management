@@ -5,6 +5,7 @@ import 'package:time_management_application/utils/colors.dart';
 import 'package:time_management_application/utils/dimensions.dart';
 import 'package:time_management_application/widgets/big_text.dart';
 
+// Creating the stateful widget.
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
 
@@ -25,16 +26,15 @@ class _RegistrationScreen extends State<RegistrationScreen> {
     try {
       Response response =
           await post(Uri.parse("http://10.0.2.2:3000/user"), body: {
-          "email": email,
-          "password": password,
-          "conformPassword": conformPassword,
+        "email": email,
+        "password": password,
+        "conformPassword": conformPassword,
       });
 
-      if (response.statusCode == 201) {
-        debugPrint("Successfully account created");
-      } else {
-        debugPrint("Somethings wrong");
-      }
+      // Using ternary operator to declare condition.
+      response.statusCode == 200 || response.statusCode == 201
+          ? debugPrint("Successfully account created")
+          : debugPrint("Somethings wrong");
     } catch (error) {
       debugPrint(error.toString());
     }

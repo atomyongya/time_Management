@@ -22,18 +22,19 @@ class _LoginScreen extends State<LoginScreen> {
   bool _isHiddenPassword = true;
   bool? _isChecked = false;
 
-  void _validatingUser(String email, String password) async{
-    try{
-      Response response = await post(Uri.parse("http://10.0.2.2:3000/user"),body:{
-      
-      "email": email,
-      "password": password,
+  void _validatingUser(String email, String password) async {
+    try {
+      Response response =
+          await post(Uri.parse("http://10.0.2.2:3000/user"), body: {
+        "email": email,
+        "password": password,
       });
 
-      if (response.statusCode == 200){
-        debugPrint("Login Successful");
-      }
-    }catch(error){
+      // Using ternary operator to define condition.
+      response.statusCode == 200
+          ? debugPrint("Login Successfull")
+          : debugPrint("Something wrong");
+    } catch (error) {
       debugPrint("Something is wrong.");
     }
   }
@@ -122,7 +123,6 @@ class _LoginScreen extends State<LoginScreen> {
                     child: const Center(
                       child: BigTextWidget(
                         text: "Login",
-                        
                       ),
                     ),
                   ),
@@ -131,11 +131,11 @@ class _LoginScreen extends State<LoginScreen> {
                       _emailController.text.toString(),
                       _passwordController.text.toString(),
                     );
-                    // Navigator.of(context).push(
-                    //   MaterialPageRoute(
-                    //     builder: (BuildContext context) => const HomeScreen(),
-                    //   ),
-                    // );
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => const HomeScreen(),
+                      ),
+                    );
                   },
                 ),
 
