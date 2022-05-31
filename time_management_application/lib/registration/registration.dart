@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:http/http.dart';
+import 'package:time_management_application/constants/constants_vairables.dart';
 import 'package:time_management_application/login/login.dart';
 import 'package:time_management_application/utils/colors.dart';
 import 'package:time_management_application/utils/dimensions.dart';
@@ -15,11 +16,16 @@ class RegistrationScreen extends StatefulWidget {
 
 // Creating the object of Registration screen.
 class _RegistrationScreen extends State<RegistrationScreen> {
+  final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _conformController = TextEditingController();
   bool _isHiddenPassword = true;
   bool? _isChecked = false;
+  DateTime? _dateTime;
+  final List<String> genderList = <String>["Male", "Female"];
+
+  String? _selectedGender;
 
   void _registerData(
       String email, String password, String conformPassword) async {
@@ -44,27 +50,114 @@ class _RegistrationScreen extends State<RegistrationScreen> {
   Widget build(BuildContext context) {
     // BuildContext keep track of all widget.
     return Center(
-      child: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: AppColors.mainColor,
-            centerTitle: mounted,
-            title: const Center(
-              child: Text("Register New Account"),
-            ),
-          ),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.mainColor,
+        ),
 
-          // ********* Body Section *************** //
-          body: Padding(
-            padding: EdgeInsets.only(
-              right: Dimensions.paddingAnyLR14,
-              left: Dimensions.paddingAnyLR14,
-              bottom: Dimensions.height10 * 4,
-            ),
+        // ********* Body Section *************** //
+        body: Container(
+          padding: EdgeInsets.only(
+            right: Dimensions.paddingAnyLR14,
+            left: Dimensions.paddingAnyLR14,
+          ),
+          child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(height: Dimensions.height10 * 10),
+                // ************* Title ****************** //
+                Center(
+                  child: BigTextWidget(
+                    text: "Sign Up",
+                    fontSize: Dimensions.height10 * 2.6,
+                    textColor: AppColors.mainColor,
+                  ),
+                ),
+                SizedBox(height: Dimensions.height10 * 2),
+
+                // *********** User name **************** //
+                TextFormField(
+                  controller: _userNameController,
+                  decoration: const InputDecoration(
+                    hintText: "User Name",
+                  ),
+                ),
+                SizedBox(height: Dimensions.height10 * 2),
+
+                // ********** Gender and Age *********** //
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Gender of the user
+                    Container(
+                      width: Dimensions.width10 * 18,
+                      height: Dimensions.height10 * 4.5,
+                      decoration: BoxDecoration(
+                        color: AppColors.mainColor,
+                        borderRadius:
+                            BorderRadius.circular(Dimensions.height10 - 8),
+                      ),
+                      child: Center(
+                        child: DropdownButton(
+                          iconEnabledColor: Colors.white,
+                          dropdownColor: AppColors.mainColor,
+                          hint: const Text(
+                            "Gender",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          value: _selectedGender,
+                          items: genderList
+                              .map(
+                                (gender) => DropdownMenuItem<String>(
+                                  value: gender,
+                                  child: Text(
+                                    gender,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (String? gender) {
+                            setState(() => _selectedGender = gender);
+                          },
+                        ),
+                      ),
+                    ),
+                    // Age of the user
+                    Container(
+                      height: Dimensions.height10 * 4.5,
+                      width: Dimensions.width10 * 18,
+                      color: AppColors.mainColor,
+                      child: ElevatedButton.icon(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(AppColors.mainColor),
+                        ),
+                        icon: ConstantsVariables.calendarIcon,
+                        label: Text(_dateTime == null
+                            ? "DATE OF BIRTH"
+                            : "${_dateTime!.year}-${_dateTime!.month}-${_dateTime!.day}"),
+                        onPressed: () {
+                          showDatePicker(
+                            context: context,
+                            initialDate: DateTime
+                                .now(), // The initialDate should not be zero.
+                            firstDate: DateTime(0),
+                            lastDate: DateTime.now(),
+                          ).then((date) {
+                            setState(() {
+                              _dateTime = date;
+                            });
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+
                 // ************* Email Input Field. ********* //
                 TextFormField(
                   controller: _emailController,
@@ -169,9 +262,11 @@ class _RegistrationScreen extends State<RegistrationScreen> {
 
   // To toggle password view
   void _togglePasswordView() {
-    setState(() {
-      _isHiddenPassword = !_isHiddenPassword;
-    });
+    setState(
+      () {
+        _isHiddenPassword = !_isHiddenPassword;
+      },
+    );
   }
 
   // Checked Box
