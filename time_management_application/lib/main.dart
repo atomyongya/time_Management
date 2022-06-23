@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
-import 'package:get/route_manager.dart';
-import 'package:time_management_application/login/login.dart';
+import 'package:time_management_application/utils/navigator.dart';
 
 void main() {
   runApp(const TimeManagement());
@@ -16,10 +15,6 @@ class TimeManagement extends StatefulWidget {
 class _TimeManagement extends State<TimeManagement> {
   @override
   Widget build(BuildContext context) {
-    return const GetMaterialApp(
-      title: "Time Management Application",
-      debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
-    );
+    return const NavigatorWidget();
   }
 }

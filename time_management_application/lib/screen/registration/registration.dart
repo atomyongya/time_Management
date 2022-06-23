@@ -1,10 +1,9 @@
 import 'dart:convert';
-
 import "package:flutter/material.dart";
 import 'package:http/http.dart';
 import 'package:time_management_application/api/user_authentication.dart';
 import 'package:time_management_application/constants/constants_vairables.dart';
-import 'package:time_management_application/login/login.dart';
+import 'package:time_management_application/screen/login/login.dart';
 import 'package:time_management_application/utils/colors.dart';
 import 'package:time_management_application/utils/dimensions.dart';
 import 'package:time_management_application/widgets/big_text.dart';
@@ -24,6 +23,8 @@ class _RegistrationScreen extends State<RegistrationScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _conformController = TextEditingController();
   bool _isHiddenPassword = true;
+  bool _isHiddenConformPassword = true;
+
   bool? _isChecked = false;
   DateTime? _age;
 
@@ -36,8 +37,8 @@ class _RegistrationScreen extends State<RegistrationScreen> {
     if (!_formKey.currentState!.validate()) {
       var data = {
         "name": _userNameController.text,
-        "gender": _selectedGender.toString(),
-        "date_of_birth": _age.toString(),
+        "gender": _selectedGender,
+        "date_of_birth": _age,
         "email": _emailController.text,
         "password": _passwordController.text,
         "password_confirmation": _conformController.text,
@@ -45,9 +46,10 @@ class _RegistrationScreen extends State<RegistrationScreen> {
 
       Response response = await UserAuthentication().postData(data, "register");
 
-      var body = json.decode(response.body.toString());
+      json.decode(response.body.toString());
       if (response.statusCode == 200 || response.statusCode == 201) {
         debugPrint("Registered Successfully");
+        
       } else {
         debugPrint("Not");
       }
@@ -195,38 +197,86 @@ class _RegistrationScreen extends State<RegistrationScreen> {
 
                   // ************* Email Input Field. ********* //
                   TextFormField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(
-                      hintText: "Email",
-                    ),
-                  ),
+                      controller: _emailController,
+                      decoration: const InputDecoration(
+                        hintText: "Email",
+                      ),
+                      validator: (email) {
+                        if (email!.isEmpty) return "Email Field is required";
+
+                        String pattern = r'\w+@\w+\.\w+';
+
+                        RegExp regExp = RegExp(pattern);
+                        if (!regExp.hasMatch(email)) {
+                          return '''Please provide validate email id.''';
+                        }
+                        return null;
+                      }),
 
                   // ************* Password Input Field. ************* //
                   SizedBox(height: Dimensions.height10 * 2),
                   TextFormField(
-                    obscureText: _isHiddenPassword,
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      hintText: "Password",
-                      suffixIcon: InkWell(
-                        onTap: _togglePasswordView,
-                        child: const Icon(Icons.visibility),
+                      obscureText: _isHiddenPassword,
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        hintText: "Password",
+                        suffixIcon: InkWell(
+                          onTap: _togglePasswordView,
+                          child: Icon(_isHiddenPassword
+                              ? Icons.visibility_off
+                              : Icons.visibility),
+                        ),
                       ),
-                    ),
-                  ),
+                      validator: (password) {
+                        if (password!.isEmpty) return "Required Field";
+
+                        String pattern =
+                            r'^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[!@#$%^&*]).{8,}$';
+
+                        RegExp regExp = RegExp(pattern);
+                        if (!regExp.hasMatch(password)) {
+                          return '''Password length must be greater or equal to 8
+                          and contain Capital and Small and Special Character ''';
+                        }
+
+                        if (_passwordController.text !=
+                            _conformController.text) {
+                          return "Password doesn't match. ";
+                        }
+                        return null;
+                      }),
 
                   SizedBox(height: Dimensions.height10 * 2),
                   TextFormField(
-                    obscureText: _isHiddenPassword,
-                    controller: _conformController,
-                    decoration: InputDecoration(
-                      hintText: "Conform Password",
-                      suffixIcon: InkWell(
-                        onTap: _togglePasswordView,
-                        child: const Icon(Icons.visibility),
+                      obscureText: _isHiddenConformPassword,
+                      controller: _conformController,
+                      decoration: InputDecoration(
+                        hintText: "Conform Password",
+                        suffixIcon: InkWell(
+                          onTap: _togglePasswordConformView,
+                          child: Icon(_isHiddenConformPassword
+                              ? Icons.visibility_off
+                              : Icons.visibility),
+                        ),
                       ),
-                    ),
-                  ),
+                      validator: (conformPassword) {
+                        if (conformPassword!.isEmpty) return "Required Field";
+
+                        String pattern =
+                            r'^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[!@#$%^&*]).{8,}$';
+
+                        RegExp regExp = RegExp(pattern);
+                        if (!regExp.hasMatch(conformPassword)) {
+                          return '''Password length must be greater or equal to 8
+                          and contain Capital and Small and Special Character ''';
+                        }
+
+                        if (_passwordController.text !=
+                            _conformController.text) {
+                          return "Password doesn't match";
+                        }
+                        return null;
+                      }),
 
                   // ************* Registration Button. ************* //
                   SizedBox(height: Dimensions.height10 * 3),
@@ -298,6 +348,14 @@ class _RegistrationScreen extends State<RegistrationScreen> {
     setState(
       () {
         _isHiddenPassword = !_isHiddenPassword;
+      },
+    );
+  }
+
+  void _togglePasswordConformView() {
+    setState(
+      () {
+        _isHiddenConformPassword = !_isHiddenConformPassword;
       },
     );
   }

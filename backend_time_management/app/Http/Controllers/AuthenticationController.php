@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
 
@@ -30,13 +28,7 @@ class AuthenticationController extends Controller
         ]);
 
         // Creating the token for the user.
-        $token = $user->createToken("time")->plainTextToken;
-
-        // Returning response to the request.
-        $response = [
-            "user" => $user,
-            "token" => $token,
-        ];
+        $token = $user->createToken("token")->plainTextToken;
 
         if ($user->save()){
             return response()->json([
