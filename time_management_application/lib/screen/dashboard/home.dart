@@ -38,6 +38,7 @@ class _HomeScreen extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.mainColor,
       body: SafeArea(
         child: Column(
           children: [
@@ -53,19 +54,20 @@ class _HomeScreen extends State<HomeScreen> {
                 children: [
                   // Menu Icon.
                   InkWell(
-                      child: AppIconWidget(
-                        icon: Icons.menu,
-                        iconColor: Colors.white,
-                        backgroundColor: AppColors.mainColor,
-                        iconSize: Dimensions.iconSize,
-                        size: Dimensions.iconBoxSize,
-                      ),
-                      onTap: () {
-                        menuIconTap = !menuIconTap;
-                        setState(() => menuIconTap
-                            ? debugPrint("Open")
-                            : debugPrint("Close"));
-                      }),
+                    child: AppIconWidget(
+                      icon: Icons.menu,
+                      iconColor: Colors.white,
+                      backgroundColor: AppColors.mainColor,
+                      iconSize: Dimensions.iconSize,
+                      size: Dimensions.iconBoxSize,
+                    ),
+                    onTap: () {
+                      menuIconTap = !menuIconTap;
+                      setState(() => menuIconTap
+                          ? debugPrint("Open")
+                          : debugPrint("Close"));
+                    },
+                  ),
 
                   // For right side of top bar.
                   Row(
@@ -91,10 +93,38 @@ class _HomeScreen extends State<HomeScreen> {
             // Body Section.
             // Selected Feature.
             Container(
-              margin: EdgeInsets.only(top: Dimensions.height10 * 2),
+              margin: EdgeInsets.only(
+                top: Dimensions.height10,
+                left: Dimensions.width5,
+                right: Dimensions.width5,
+              ),
               height: Dimensions.featureBoxHeight200,
-              width: Dimensions.featureBoxWidth200,
-              color: AppColors.mainColor,
+              width: double.infinity,
+              child: Row(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Center(
+                      child: Text(
+                        "Manage \n\t\t\tYour Time",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 35,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(22),
+                    child: Image.asset(
+                      "assets/images/manage.png",
+                      fit: BoxFit.cover,
+                      width: 100,
+                      height: 100,
+                    ),
+                  ),
+                ],
+              ),
             ),
 
             // Feature Option.
@@ -114,21 +144,13 @@ class _HomeScreen extends State<HomeScreen> {
                           // For Icon
                           Align(
                             alignment: Alignment.topCenter,
-                            child: Container(
-                              margin: EdgeInsets.only(
-                                right: Dimensions.width10,
-                                left: Dimensions.width10,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              child: AppIconWidget(
-                                iconColor: Colors.white,
-                                icon: featureIcons[index],
-                                iconSize: 46,
-                                size: 100,
-                                backgroundColor: Colors.pink,
-                              ),
+                            child: AppIconWidget(
+                              iconColor: Colors.white,
+                              icon: featureIcons[index],
+                              iconSize: 46,
+                              size: 80,
+                              backgroundColor:
+                                  const Color.fromARGB(255, 114, 53, 237),
                             ),
                           ),
 
@@ -137,7 +159,6 @@ class _HomeScreen extends State<HomeScreen> {
                             alignment: Alignment.bottomCenter,
                             child: Container(
                               width: 100,
-                              color: Colors.grey,
                               margin: EdgeInsets.only(
                                 bottom: Dimensions.height5,
                               ),
@@ -152,8 +173,17 @@ class _HomeScreen extends State<HomeScreen> {
                         ],
                       ),
                       onTap: () {
-                        selectedFeature = !selectedFeature;
-                        setState(() {});
+                        if (index == 0) {
+                          Navigator.pushNamed(context, "/notify");
+                        } else if (index == 1) {
+                          Navigator.pushNamed(context, "/note");
+                        } else if (index == 2) {
+                          Navigator.pushNamed(context, "/timetable");
+                        } else if (index == 3) {
+                          Navigator.pushNamed(context, "/daycount");
+                        } else {
+                          debugPrint("Screen doesn't exist.");
+                        }
                       },
                     ),
                   );
@@ -161,15 +191,14 @@ class _HomeScreen extends State<HomeScreen> {
               ),
             ),
 
-               SingleChildScrollView(
-                child: Container(
-                  height: Dimensions.featureBoxHeight200 * 1.4,
-                  color: Colors.red,
-                  margin: EdgeInsets.only(
-                      left: Dimensions.marginAnyLR14,
-                      right: Dimensions.marginAnyLR14),
-                ),
+            SingleChildScrollView(
+              child: Container(
+                height: Dimensions.featureBoxHeight200 * 1.4,
+                margin: EdgeInsets.only(
+                    left: Dimensions.marginAnyLR14,
+                    right: Dimensions.marginAnyLR14),
               ),
+            ),
           ],
         ),
       ),
@@ -181,8 +210,8 @@ class _HomeScreen extends State<HomeScreen> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Business',
+            icon: Icon(Icons.account_circle_outlined),
+            label: 'Profile',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
@@ -191,5 +220,9 @@ class _HomeScreen extends State<HomeScreen> {
         ],
       ),
     );
+  }
+
+  featureScreen(String link) {
+    return Navigator.pushNamed(context, link);
   }
 }

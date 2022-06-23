@@ -54,7 +54,7 @@ class AuthenticationController extends Controller
         if (!$user || !Hash::check($fields["password"], $user->password)){
             return response([
                 "message" => "Bad Crenditials",
-            ]);
+            ], 401);
         }
 
 

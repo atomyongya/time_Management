@@ -23,7 +23,7 @@ class _LoginScreen extends State<LoginScreen> {
   bool? _isChecked = false;
   final _loginFormKey = GlobalKey<FormState>();
 
-  void _validatingUser() async {
+  _validatingUser() async {
     if (_loginFormKey.currentState!.validate()) {
       try {
         var data = {
@@ -37,6 +37,11 @@ class _LoginScreen extends State<LoginScreen> {
           if (!mounted) return;
           debugPrint(response.statusCode.toString());
           Navigator.pushNamed(context, "/");
+        } else {
+          if (!mounted) return;
+          return ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Bad Crenditial")),
+          );
         }
       } catch (error) {
         debugPrint("Something is wrong.");
@@ -52,6 +57,7 @@ class _LoginScreen extends State<LoginScreen> {
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: AppColors.mainColor,
+            automaticallyImplyLeading: false,
             title: const Center(
               child: Text("Time Management"),
             ),
@@ -70,10 +76,20 @@ class _LoginScreen extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const Center(
+                    child: BigTextWidget(
+                      text: "Login",
+                      fontSize: 30,
+                      textColor: AppColors.mainColor,
+                    ),
+                  ),
+
                   // ************* Email Input Field. ********* //
+                  SizedBox(height: Dimensions.height10),
                   TextFormField(
                       controller: _emailController,
                       decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.email),
                         hintText: "Email",
                       ),
                       validator: (email) {
@@ -96,6 +112,7 @@ class _LoginScreen extends State<LoginScreen> {
                       controller: _passwordController,
                       decoration: InputDecoration(
                         hintText: "Password",
+                        prefixIcon: const Icon(Icons.lock),
                         suffixIcon: InkWell(
                           onTap: _togglePasswordView,
                           child: Icon(_isHiddenPassword
