@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-
+use Illuminate\Support\Facades\Hash;
 
 class AuthenticationController extends Controller
 {
@@ -40,6 +40,34 @@ class AuthenticationController extends Controller
                 "success" => false,
             ]);
         }
+    }
+
+    public function login(Request $request){
+        $fields = $request->validate([
+            "email" => "required|String",
+            "password" => "required|String",
+        ]);
+
+        $user = User::where("email", $fields["email"])->first();
+
+        // Checking password
+        if (!$user || !Hash::check($fields["password"], $user->password)){
+            return response([
+                "message" => "Bad Crenditials",
+            ]);
+        }
+
+
+        // Creating token when login
+        $token = $user->createToken("apptoken")->plainTextToken;
+
+        $response = [
+            "user" => $user,
+            "token" => $token,
+        ];
+
+
+        return $response;
     }
 
 }

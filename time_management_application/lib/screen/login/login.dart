@@ -1,5 +1,6 @@
 // Importing flutter package.
 import "package:flutter/material.dart";
+import 'package:time_management_application/api/user_authentication.dart';
 import 'package:time_management_application/screen/registration/registration.dart';
 import 'package:time_management_application/utils/colors.dart';
 import 'package:time_management_application/utils/dimensions.dart';
@@ -22,19 +23,21 @@ class _LoginScreen extends State<LoginScreen> {
   bool? _isChecked = false;
   final _loginFormKey = GlobalKey<FormState>();
 
-  void _validatingUser(String email, String password) async {
+  void _validatingUser() async {
     if (_loginFormKey.currentState!.validate()) {
       try {
-        Response response =
-            await post(Uri.parse("http://10.0.2.2:3000/user"), body: {
-          "email": email,
-          "password": password,
-        });
+        var data = {
+          "email": _emailController.text,
+          "password": _passwordController.text,
+        };
 
-        // Using ternary operator to define condition.
-        response.statusCode == 200
-            ? debugPrint("Login Successfull")
-            : debugPrint("Something wrong");
+        Response response = await UserAuthentication().postData(data, "login");
+
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          if (!mounted) return;
+          debugPrint(response.statusCode.toString());
+          Navigator.pushNamed(context, "/");
+        }
       } catch (error) {
         debugPrint("Something is wrong.");
       }
@@ -147,10 +150,7 @@ class _LoginScreen extends State<LoginScreen> {
                       ),
                     ),
                     onTap: () {
-                      _validatingUser(
-                        _emailController.text.toString(),
-                        _passwordController.text.toString(),
-                      );
+                      _validatingUser();
                       // Navigator.of(context).push(
                       //   MaterialPageRoute(
                       //     builder: (BuildContext context) => const HomeScreen(),

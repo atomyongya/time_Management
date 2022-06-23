@@ -33,26 +33,27 @@ class _RegistrationScreen extends State<RegistrationScreen> {
 
   String? _selectedGender;
 
-  Future _registerData() async {
-    if (!_formKey.currentState!.validate()) {
-      var data = {
-        "name": _userNameController.text,
-        "gender": _selectedGender,
-        "date_of_birth": _age,
-        "email": _emailController.text,
-        "password": _passwordController.text,
-        "password_confirmation": _conformController.text,
-      };
+  _registerData() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        var data = {
+          "name": _userNameController.text,
+          "gender": _selectedGender.toString(),
+          "date_of_birth": _age.toString(),
+          "email": _emailController.text,
+          "password": _passwordController.text,
+          "password_confirmation": _conformController.text,
+        };
 
-      Response response = await UserAuthentication().postData(data, "register");
-
-      json.decode(response.body.toString());
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        debugPrint("Registered Successfully");
-        
-      } else {
-        debugPrint("Not");
+        Response response =
+            await UserAuthentication().postData(data, "register");
+        json.decode(response.body.toString());
+        return response;
+      } catch (error) {
+        debugPrint("Error in _registerData() is \n $error");
       }
+    } else {
+      debugPrint("Bad Cradentials");
     }
   }
 
@@ -222,9 +223,11 @@ class _RegistrationScreen extends State<RegistrationScreen> {
                         hintText: "Password",
                         suffixIcon: InkWell(
                           onTap: _togglePasswordView,
-                          child: Icon(_isHiddenPassword
-                              ? Icons.visibility_off
-                              : Icons.visibility),
+                          child: Icon(
+                            _isHiddenPassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
                         ),
                       ),
                       validator: (password) {
@@ -254,9 +257,11 @@ class _RegistrationScreen extends State<RegistrationScreen> {
                         hintText: "Conform Password",
                         suffixIcon: InkWell(
                           onTap: _togglePasswordConformView,
-                          child: Icon(_isHiddenConformPassword
-                              ? Icons.visibility_off
-                              : Icons.visibility),
+                          child: Icon(
+                            _isHiddenConformPassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
                         ),
                       ),
                       validator: (conformPassword) {
@@ -294,13 +299,17 @@ class _RegistrationScreen extends State<RegistrationScreen> {
                         ),
                       ),
                     ),
-                    onTap: () {
-                      _registerData();
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //     builder: (BuildContext context) => const LoginScreen(),
-                      //   ),
-                      // );
+                    onTap: () async {
+                      Response response = await _registerData();
+                      if (response.statusCode == 200 ||
+                          response.statusCode == 201) {
+                        debugPrint("Response is : $response");
+                        if (!mounted) return;
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, "/otp", (route) => false);
+                      } else {
+                        debugPrint("Bad Response.");
+                      }
                     },
                   ),
 
