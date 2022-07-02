@@ -53,161 +53,188 @@ class _LoginScreen extends State<LoginScreen> {
   Widget build(BuildContext context) {
     // BuildContext keep track of all widget.
     return Center(
-      child: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: AppColors.mainColor,
-            automaticallyImplyLeading: false,
-            title: const Center(
-              child: Text("Time Management"),
-            ),
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundColor,
+        appBar: AppBar(
+          backgroundColor: AppColors.backgroundColor,
+          automaticallyImplyLeading: false,
+          title: const Center(
+            child: Text("Time Management"),
           ),
+        ),
 
-          // ********* Body Section *************** //
-          body: Padding(
-            padding: EdgeInsets.only(
-              right: Dimensions.paddingAnyLR14,
-              left: Dimensions.paddingAnyLR14,
-              bottom: Dimensions.height10 * 4,
-            ),
-            child: Form(
-              key: _loginFormKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Center(
-                    child: BigTextWidget(
-                      text: "Login",
-                      fontSize: 30,
-                      textColor: AppColors.mainColor,
-                    ),
+        // ********* Body Section *************** //
+        body: Padding(
+          padding: EdgeInsets.only(
+            right: Dimensions.paddingAnyLR14,
+            left: Dimensions.paddingAnyLR14,
+            bottom: Dimensions.height10 * 4,
+          ),
+          child: Form(
+            key: _loginFormKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Center(
+                  child: BigTextWidget(
+                    text: "Login",
+                    fontSize: 30,
+                    textColor: AppColors.mainColor,
                   ),
+                ),
 
-                  // ************* Email Input Field. ********* //
-                  SizedBox(height: Dimensions.height10),
-                  TextFormField(
-                      controller: _emailController,
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.email),
-                        hintText: "Email",
+                // ************* Email Input Field. ********* //
+                SizedBox(height: Dimensions.height10),
+                TextFormField(
+                    controller: _emailController,
+                    decoration: const InputDecoration(
+                      fillColor: Colors.white,
+                      prefixIcon: Icon(
+                        Icons.email,
+                        color: Color.fromARGB(255, 255, 255, 255),
                       ),
-                      validator: (email) {
-                        if (email!.isEmpty) return "Email Required Field";
+                      hintText: "Email",
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.white,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.white,
+                        ),
+                      ),
+                      hintStyle: TextStyle(color: Colors.white),
+                    ),
+                    validator: (email) {
+                      if (email!.isEmpty) return "Email Required Field";
 
-                        String pattern = r'\w+@\w+\.\w+';
+                      String pattern = r'\w+@\w+\.\w+';
 
-                        RegExp regExp = RegExp(pattern);
+                      RegExp regExp = RegExp(pattern);
 
-                        if (!regExp.hasMatch(email)) {
-                          return '''Provide valid email''';
-                        }
-                        return null;
-                      }),
+                      if (!regExp.hasMatch(email)) {
+                        return '''Provide valid email''';
+                      }
+                      return null;
+                    }),
 
-                  // ************* Password Input Field. ************* //
-                  SizedBox(height: Dimensions.height10 * 2),
-                  TextFormField(
-                      obscureText: _isHiddenPassword,
-                      controller: _passwordController,
-                      decoration: InputDecoration(
-                        hintText: "Password",
-                        prefixIcon: const Icon(Icons.lock),
-                        suffixIcon: InkWell(
-                          onTap: _togglePasswordView,
-                          child: Icon(_isHiddenPassword
+                // ************* Password Input Field. ************* //
+                SizedBox(height: Dimensions.height10 * 2),
+                TextFormField(
+                    obscureText: _isHiddenPassword,
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      hintText: "Password",
+                      focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.white,
+                        ),
+                      ),
+                      enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.white,
+                        ),
+                      ),
+                      hintStyle: const TextStyle(color: Colors.white),
+                      prefixIcon: const Icon(
+                        Icons.lock,
+                        color: Colors.white,
+                      ),
+                      suffixIcon: InkWell(
+                        onTap: _togglePasswordView,
+                        child: Icon(
+                          _isHiddenPassword
                               ? Icons.visibility_off
-                              : Icons.visibility),
-                        ),
-                      ),
-                      validator: (password) {
-                        if (password!.isEmpty) return "Password Field Required";
-                        return null;
-                      }),
-
-                  // ************ Remember Me and Forget password ************ //
-                  SizedBox(height: Dimensions.height10 * 2),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // ************* Remember Me ************* //
-                      Row(
-                        children: [
-                          checkBox(),
-                          const Text("Remember me"),
-                        ],
-                      ),
-                      // ************* Forget Password ************* //
-                      InkWell(
-                        child: const Text(
-                          "Forget Your password?    ",
-                          style: TextStyle(
-                            color: Colors.blue,
-                          ),
-                        ),
-                        onTap: () {},
-                      ),
-                    ],
-                  ),
-
-                  // ************* Login Button. ************* //
-                  SizedBox(height: Dimensions.height10 * 3),
-                  InkWell(
-                    child: Container(
-                      height: Dimensions.height10 * 5,
-                      width: double.maxFinite,
-                      decoration: BoxDecoration(
-                        color: AppColors.mainColor,
-                        borderRadius: BorderRadius.circular(Dimensions.height5),
-                      ),
-                      child: const Center(
-                        child: BigTextWidget(
-                          text: "Login",
+                              : Icons.visibility,
+                          color: Colors.white,
                         ),
                       ),
                     ),
-                    onTap: () {
-                      _validatingUser();
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //     builder: (BuildContext context) => const HomeScreen(),
-                      //   ),
-                      // );
-                    },
-                  ),
+                    validator: (password) {
+                      if (password!.isEmpty) return "Password Field Required";
+                      return null;
+                    }),
 
-                  // ************* No Register ************* //
-                  SizedBox(
-                    height: Dimensions.height10,
-                  ),
-                  Row(
-                    children: [
-                      const Text(
-                        "Don't have an account?    ",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          setState(
-                            () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      const RegistrationScreen(),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        child: const Text(
-                          "Register",
-                          style: TextStyle(color: Colors.blue),
+                // ************ Remember Me and Forget password ************ //
+                SizedBox(height: Dimensions.height10 * 2),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // ************* Remember Me ************* //
+                    Row(
+                      children: [
+                        checkBox(),
+                        const Text("Remember me",
+                            style: TextStyle(color: Colors.white)),
+                      ],
+                    ),
+                    // ************* Forget Password ************* //
+                    InkWell(
+                      child: const Text(
+                        "Forget Your password?    ",
+                        style: TextStyle(
+                          color: Colors.blue,
                         ),
                       ),
-                    ],
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+
+                // ************* Login Button. ************* //
+                SizedBox(height: Dimensions.height10 * 3),
+                InkWell(
+                  child: Container(
+                    height: Dimensions.height10 * 5,
+                    width: double.maxFinite,
+                    decoration: BoxDecoration(
+                      color: AppColors.mainColor,
+                      borderRadius: BorderRadius.circular(Dimensions.height5),
+                    ),
+                    child: const Center(
+                      child: BigTextWidget(
+                        text: "Login",
+                      ),
+                    ),
                   ),
-                ],
-              ),
+                  onTap: () {
+                    _validatingUser();
+                  },
+                ),
+
+                // ************* No Register ************* //
+                SizedBox(
+                  height: Dimensions.height10,
+                ),
+                Row(
+                  children: [
+                    const Text(
+                      "Don't have an account?    ",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        setState(
+                          () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    const RegistrationScreen(),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: const Text(
+                        "Register",
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
@@ -229,6 +256,9 @@ class _LoginScreen extends State<LoginScreen> {
         margin: EdgeInsets.only(
             left: Dimensions.width5, right: Dimensions.marginAnyLR14),
         child: Checkbox(
+          side: MaterialStateBorderSide.resolveWith(
+            (states) => const BorderSide(width: 2, color: Colors.white),
+          ),
           value: _isChecked,
           onChanged: (bool? newValue) {
             setState(() {

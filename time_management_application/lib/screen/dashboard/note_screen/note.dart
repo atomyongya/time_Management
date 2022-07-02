@@ -1,4 +1,6 @@
 import "package:flutter/material.dart";
+import 'package:time_management_application/utils/colors.dart';
+import 'package:time_management_application/widgets/small_text.dart';
 
 class NoteScreen extends StatefulWidget {
   const NoteScreen({Key? key}) : super(key: key);
@@ -10,8 +12,18 @@ class NoteScreen extends StatefulWidget {
 class _NoteScreen extends State<NoteScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Text("Note Page"),
+    return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
+      appBar: AppBar(
+        title: const SmallTextWidget(text: "Note"),
+        centerTitle: true,
+        backgroundColor: AppColors.backgroundColor,
+      ),
+      body: Center(
+        child: Column(
+          children: [],
+        ),
+      ),
     );
   }
 }

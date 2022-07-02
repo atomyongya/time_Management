@@ -38,14 +38,14 @@ class _HomeScreen extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.mainColor,
+      backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
         child: Column(
           children: [
             // Top Bar.
             Container(
               height: Dimensions.headerHeight,
-              color: AppColors.mainColor,
+              color: AppColors.backgroundColor,
               padding: EdgeInsets.only(
                   right: Dimensions.paddingAnyLR14,
                   left: Dimensions.paddingAnyLR14),
@@ -57,7 +57,7 @@ class _HomeScreen extends State<HomeScreen> {
                     child: AppIconWidget(
                       icon: Icons.menu,
                       iconColor: Colors.white,
-                      backgroundColor: AppColors.mainColor,
+                      backgroundColor: AppColors.backgroundColor,
                       iconSize: Dimensions.iconSize,
                       size: Dimensions.iconBoxSize,
                     ),
@@ -80,7 +80,7 @@ class _HomeScreen extends State<HomeScreen> {
                       AppIconWidget(
                         icon: Icons.account_circle,
                         iconColor: Colors.white,
-                        backgroundColor: AppColors.mainColor,
+                        backgroundColor: AppColors.backgroundColor,
                         iconSize: Dimensions.iconSize,
                         size: Dimensions.iconBoxSize,
                       )
@@ -150,7 +150,7 @@ class _HomeScreen extends State<HomeScreen> {
                               iconSize: 46,
                               size: 80,
                               backgroundColor:
-                                  const Color.fromARGB(255, 114, 53, 237),
+                                  AppColors.skyBlueColor.withOpacity(0.8),
                             ),
                           ),
 
@@ -203,10 +203,15 @@ class _HomeScreen extends State<HomeScreen> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: AppColors.backgroundColor,
         type: BottomNavigationBarType.fixed,
+        unselectedItemColor: Colors.white,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(
+              Icons.home,
+              color: Colors.white,
+            ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
@@ -215,7 +220,7 @@ class _HomeScreen extends State<HomeScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            label: 'Setting',
+            label: "Settings",
           ),
         ],
       ),
