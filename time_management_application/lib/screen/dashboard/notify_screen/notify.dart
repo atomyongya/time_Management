@@ -21,7 +21,7 @@ class _NotifyScreen extends State<NotifyScreen> {
       ),
       body: Center(
         child: Column(
-          children: [],
+          children: const [],
         ),
       ),
     );

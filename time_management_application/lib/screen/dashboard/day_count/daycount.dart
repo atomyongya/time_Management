@@ -21,7 +21,7 @@ class _DayCountScreen extends State<DayCountScreen> {
       ),
       body: Center(
         child: Column(
-          children: [],
+          children: const [Text("Count Page")],
         ),
       ),
     );

@@ -1,6 +1,8 @@
-// Importing flutter package.
+import 'dart:developer';
 import "package:flutter/material.dart";
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:time_management_application/api/user_authentication.dart';
+import 'package:time_management_application/screen/dashboard/home.dart';
 import 'package:time_management_application/screen/registration/registration.dart';
 import 'package:time_management_application/utils/colors.dart';
 import 'package:time_management_application/utils/dimensions.dart';
@@ -22,6 +24,17 @@ class _LoginScreen extends State<LoginScreen> {
   bool _isHiddenPassword = true;
   bool? _isChecked = false;
   final _loginFormKey = GlobalKey<FormState>();
+  SharedPreferences? _emailSaved;
+  @override
+  void initState() {
+    super.initState();
+    rememberMe();
+  }
+
+  rememberMe() async {
+    final preference = await SharedPreferences.getInstance();
+    _emailSaved = preference.get("email") as SharedPreferences?;
+  }
 
   _validatingUser() async {
     if (_loginFormKey.currentState!.validate()) {
@@ -34,9 +47,17 @@ class _LoginScreen extends State<LoginScreen> {
         Response response = await UserAuthentication().postData(data, "login");
 
         if (response.statusCode == 200 || response.statusCode == 201) {
+          if (_isChecked == true) {
+            final preference = await SharedPreferences.getInstance();
+            preference.setString("email", _emailController.text);
+          }
           if (!mounted) return;
-          debugPrint(response.statusCode.toString());
-          Navigator.pushNamed(context, "/");
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomeScreen(),
+              ),
+              (route) => false);
         } else {
           if (!mounted) return;
           return ScaffoldMessenger.of(context).showSnackBar(
@@ -80,14 +101,17 @@ class _LoginScreen extends State<LoginScreen> {
                   child: BigTextWidget(
                     text: "Login",
                     fontSize: 30,
-                    textColor: AppColors.mainColor,
+                    textColor: Colors.white,
                   ),
                 ),
+                const SizedBox(height: 20),
 
                 // ************* Email Input Field. ********* //
                 SizedBox(height: Dimensions.height10),
                 TextFormField(
+                    enableSuggestions: true,
                     controller: _emailController,
+                    style: const TextStyle(color: Colors.white),
                     decoration: const InputDecoration(
                       fillColor: Colors.white,
                       prefixIcon: Icon(
@@ -123,7 +147,10 @@ class _LoginScreen extends State<LoginScreen> {
                 // ************* Password Input Field. ************* //
                 SizedBox(height: Dimensions.height10 * 2),
                 TextFormField(
+                    enableInteractiveSelection: false,
+                    restorationId: _passwordController.text,
                     obscureText: _isHiddenPassword,
+                    style: const TextStyle(color: Colors.white),
                     controller: _passwordController,
                     decoration: InputDecoration(
                       hintText: "Password",
@@ -260,7 +287,8 @@ class _LoginScreen extends State<LoginScreen> {
             (states) => const BorderSide(width: 2, color: Colors.white),
           ),
           value: _isChecked,
-          onChanged: (bool? newValue) {
+          onChanged: (newValue) {
+            log(newValue.toString());
             setState(() {
               _isChecked = newValue;
             });

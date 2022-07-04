@@ -21,7 +21,7 @@ class _NoteScreen extends State<NoteScreen> {
       ),
       body: Center(
         child: Column(
-          children: [],
+          children: const [],
         ),
       ),
     );

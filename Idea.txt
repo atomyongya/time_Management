@@ -1,9 +1,0 @@
-Registration Form
- -> password and conform password should match
- -> Cannot copy password
-
-
-Login Form
- -> Send to Home Page on the basis of response from server.
- -> Work on Remember me.
- -> Cannot copy password

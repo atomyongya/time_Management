@@ -21,7 +21,7 @@ class _TimeTableScreen extends State<TimeTableScreen> {
       ),
       body: Center(
         child: Column(
-          children: [],
+          children: const [],
         ),
       ),
     );

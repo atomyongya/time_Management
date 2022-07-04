@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import "package:flutter/material.dart";
 import 'package:time_management_application/utils/colors.dart';
 import 'package:time_management_application/utils/dimensions.dart';
@@ -43,50 +45,30 @@ class _HomeScreen extends State<HomeScreen> {
         child: Column(
           children: [
             // Top Bar.
-            Container(
-              height: Dimensions.headerHeight,
-              color: AppColors.backgroundColor,
-              padding: EdgeInsets.only(
-                  right: Dimensions.paddingAnyLR14,
-                  left: Dimensions.paddingAnyLR14),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Menu Icon.
-                  InkWell(
-                    child: AppIconWidget(
-                      icon: Icons.menu,
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                width: double.infinity,
+                height: Dimensions.headerHeight,
+                color: AppColors.backgroundColor,
+                padding: EdgeInsets.only(
+                    right: Dimensions.paddingAnyLR14,
+                    left: Dimensions.paddingAnyLR14),
+                child: Row(
+                  children: [
+                    BigTextWidget(
+                      text: "Atom",
+                      fontSize: Dimensions.smallTextSize,
+                    ),
+                    AppIconWidget(
+                      icon: Icons.account_circle,
                       iconColor: Colors.white,
                       backgroundColor: AppColors.backgroundColor,
                       iconSize: Dimensions.iconSize,
                       size: Dimensions.iconBoxSize,
-                    ),
-                    onTap: () {
-                      menuIconTap = !menuIconTap;
-                      setState(() => menuIconTap
-                          ? debugPrint("Open")
-                          : debugPrint("Close"));
-                    },
-                  ),
-
-                  // For right side of top bar.
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      BigTextWidget(
-                        text: "Atom",
-                        fontSize: Dimensions.smallTextSize,
-                      ),
-                      AppIconWidget(
-                        icon: Icons.account_circle,
-                        iconColor: Colors.white,
-                        backgroundColor: AppColors.backgroundColor,
-                        iconSize: Dimensions.iconSize,
-                        size: Dimensions.iconBoxSize,
-                      )
-                    ],
-                  ),
-                ],
+                    )
+                  ],
+                ),
               ),
             ),
 
@@ -149,8 +131,7 @@ class _HomeScreen extends State<HomeScreen> {
                               icon: featureIcons[index],
                               iconSize: 46,
                               size: 80,
-                              backgroundColor:
-                                  AppColors.skyBlueColor.withOpacity(0.8),
+                              backgroundColor: Colors.lightBlue,
                             ),
                           ),
 
@@ -191,7 +172,8 @@ class _HomeScreen extends State<HomeScreen> {
               ),
             ),
 
-            SingleChildScrollView(
+            Expanded(
+              flex: 2,
               child: Container(
                 height: Dimensions.featureBoxHeight200 * 1.4,
                 margin: EdgeInsets.only(
@@ -203,6 +185,13 @@ class _HomeScreen extends State<HomeScreen> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        onTap: ((value) => {
+              log(value.toString()),
+              if (value == 2)
+                {
+                  Navigator.pushNamed(context, "/settings"),
+                }
+            }),
         backgroundColor: AppColors.backgroundColor,
         type: BottomNavigationBarType.fixed,
         unselectedItemColor: Colors.white,

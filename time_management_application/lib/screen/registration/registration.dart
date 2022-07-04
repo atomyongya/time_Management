@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import "package:flutter/material.dart";
 import 'package:http/http.dart';
 import 'package:time_management_application/api/user_authentication.dart';
@@ -38,7 +39,7 @@ class _RegistrationScreen extends State<RegistrationScreen> {
       try {
         var data = {
           "name": _userNameController.text,
-          "gender": _selectedGender.toString(),
+          "gender": _selectedGender,
           "date_of_birth": _age.toString(),
           "email": _emailController.text,
           "password": _passwordController.text,
@@ -48,7 +49,11 @@ class _RegistrationScreen extends State<RegistrationScreen> {
         Response response =
             await UserAuthentication().postData(data, "register");
         json.decode(response.body.toString());
-        return response;
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          if (!mounted) return;
+          Navigator.pushNamedAndRemoveUntil(
+              context, "/signin", (route) => false);
+        }
       } catch (error) {
         debugPrint("Error in _registerData() is \n $error");
       }
@@ -62,8 +67,9 @@ class _RegistrationScreen extends State<RegistrationScreen> {
     // BuildContext keep track of all widget.
     return Center(
       child: Scaffold(
+        backgroundColor: AppColors.backgroundColor,
         appBar: AppBar(
-          backgroundColor: AppColors.mainColor,
+          backgroundColor: AppColors.backgroundColor,
         ),
 
         // ********* Body Section *************** //
@@ -82,15 +88,25 @@ class _RegistrationScreen extends State<RegistrationScreen> {
                   BigTextWidget(
                     text: "Sign Up",
                     fontSize: Dimensions.height10 * 2.6,
-                    textColor: AppColors.mainColor,
+                    textColor: AppColors.whiteColor,
                   ),
                   SizedBox(height: Dimensions.height10 * 2),
 
                   // *********** User name **************** //
                   TextFormField(
+                      style: const TextStyle(color: AppColors.whiteColor),
                       controller: _userNameController,
                       decoration: const InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: AppColors.whiteColor,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColors.whiteColor),
+                        ),
                         hintText: "User Name",
+                        hintStyle: TextStyle(color: AppColors.whiteColor),
                       ),
                       validator: (name) {
                         if (name!.isEmpty) {
@@ -188,6 +204,7 @@ class _RegistrationScreen extends State<RegistrationScreen> {
                             ).then((date) {
                               setState(() {
                                 _age = date;
+                                log(date.toString());
                               });
                             });
                           },
@@ -195,12 +212,21 @@ class _RegistrationScreen extends State<RegistrationScreen> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 20),
 
                   // ************* Email Input Field. ********* //
                   TextFormField(
+                      style: const TextStyle(color: AppColors.whiteColor),
                       controller: _emailController,
                       decoration: const InputDecoration(
                         hintText: "Email",
+                        hintStyle: TextStyle(color: AppColors.whiteColor),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColors.whiteColor),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColors.whiteColor),
+                        ),
                       ),
                       validator: (email) {
                         if (email!.isEmpty) return "Email Field is required";
@@ -217,16 +243,26 @@ class _RegistrationScreen extends State<RegistrationScreen> {
                   // ************* Password Input Field. ************* //
                   SizedBox(height: Dimensions.height10 * 2),
                   TextFormField(
+                      enableInteractiveSelection: false,
+                      style: const TextStyle(color: Colors.white),
                       obscureText: _isHiddenPassword,
                       controller: _passwordController,
                       decoration: InputDecoration(
+                        focusedBorder: const OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: AppColors.whiteColor)),
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColors.whiteColor),
+                        ),
                         hintText: "Password",
+                        hintStyle: const TextStyle(color: AppColors.whiteColor),
                         suffixIcon: InkWell(
                           onTap: _togglePasswordView,
                           child: Icon(
                             _isHiddenPassword
                                 ? Icons.visibility_off
                                 : Icons.visibility,
+                            color: AppColors.whiteColor,
                           ),
                         ),
                       ),
@@ -251,16 +287,26 @@ class _RegistrationScreen extends State<RegistrationScreen> {
 
                   SizedBox(height: Dimensions.height10 * 2),
                   TextFormField(
+                      enableInteractiveSelection: false,
+                      style: const TextStyle(color: AppColors.whiteColor),
                       obscureText: _isHiddenConformPassword,
                       controller: _conformController,
                       decoration: InputDecoration(
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColors.whiteColor),
+                        ),
+                        focusedBorder: const OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: AppColors.skyBlueColor)),
                         hintText: "Conform Password",
+                        hintStyle: const TextStyle(color: AppColors.whiteColor),
                         suffixIcon: InkWell(
                           onTap: _togglePasswordConformView,
                           child: Icon(
                             _isHiddenConformPassword
                                 ? Icons.visibility_off
                                 : Icons.visibility,
+                            color: AppColors.whiteColor,
                           ),
                         ),
                       ),
@@ -299,17 +345,8 @@ class _RegistrationScreen extends State<RegistrationScreen> {
                         ),
                       ),
                     ),
-                    onTap: () async {
-                      Response response = await _registerData();
-                      if (response.statusCode == 200 ||
-                          response.statusCode == 201) {
-                        debugPrint("Response is : $response");
-                        if (!mounted) return;
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, "/otp", (route) => false);
-                      } else {
-                        debugPrint("Bad Response.");
-                      }
+                    onTap: () {
+                      _registerData();
                     },
                   ),
 
@@ -320,8 +357,8 @@ class _RegistrationScreen extends State<RegistrationScreen> {
                   Row(
                     children: [
                       const Text(
-                        "Already have an account?    ",
-                        style: TextStyle(color: Colors.black),
+                        "Already have an account ?    ",
+                        style: TextStyle(color: Colors.white),
                       ),
                       InkWell(
                         onTap: () {

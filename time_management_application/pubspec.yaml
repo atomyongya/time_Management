@@ -37,6 +37,8 @@ dependencies:
   get: ^4.6.3
   http: ^0.13.4
   http3: ^0.0.0
+  shared_preferences: ^2.0.15
+  flutter_secure_storage: ^5.0.2
 
 dev_dependencies:
   flutter_test:
