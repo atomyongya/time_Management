@@ -131,7 +131,7 @@ class _HomeScreen extends State<HomeScreen> {
                               icon: featureIcons[index],
                               iconSize: 46,
                               size: 80,
-                              backgroundColor: Colors.lightBlue,
+                              backgroundColor: AppColors.backgroundColor,
                             ),
                           ),
 

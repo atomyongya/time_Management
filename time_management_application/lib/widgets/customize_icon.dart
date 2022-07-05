@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 
-// Creating class AppIcon which can be customize. 
+// Creating class AppIcon which can be customize.
 class AppIconWidget extends StatelessWidget {
   final IconData icon;
   final double iconSize;

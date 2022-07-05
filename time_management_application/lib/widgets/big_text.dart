@@ -20,9 +20,7 @@ class BigTextWidget extends StatelessWidget {
         fontSize: fontSize,
         color: textColor,
         fontFamily: "Roboto",
-        fontWeight: FontWeight.w800,
       ),
     );
   }
 }
-  

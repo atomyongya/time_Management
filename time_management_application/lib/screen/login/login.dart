@@ -24,17 +24,6 @@ class _LoginScreen extends State<LoginScreen> {
   bool _isHiddenPassword = true;
   bool? _isChecked = false;
   final _loginFormKey = GlobalKey<FormState>();
-  SharedPreferences? _emailSaved;
-  @override
-  void initState() {
-    super.initState();
-    rememberMe();
-  }
-
-  rememberMe() async {
-    final preference = await SharedPreferences.getInstance();
-    _emailSaved = preference.get("email") as SharedPreferences?;
-  }
 
   _validatingUser() async {
     if (_loginFormKey.currentState!.validate()) {
