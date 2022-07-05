@@ -1,7 +1,8 @@
 Notify:
 (1) Should produce alarm on specific time given by user.
     a) Add event button. **
-    b) List should be produce if new event is added to it.
+    b) List should be produce if new event is added to it. **
+        (i) event appear only when hot refresh or reload.
     c) list of event should be able to CRUD operation.
 
 (2) Near event should be display on bottom of the home screen.

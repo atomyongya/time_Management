@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:time_management_application/api/user_authentication.dart';
 import 'package:time_management_application/utils/colors.dart';
 import 'package:time_management_application/utils/dimensions.dart';
 import 'package:time_management_application/widgets/big_text.dart';
+import 'package:http/http.dart' as http;
 
 class AddListWidget extends StatefulWidget {
   const AddListWidget({Key? key}) : super(key: key);
@@ -19,6 +18,7 @@ class _AddListWidgetState extends State<AddListWidget> {
   DateTime? _date = DateTime.now();
   TimeOfDay? _time = const TimeOfDay(hour: 5, minute: 00);
   final _eventController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -182,21 +182,25 @@ class _AddListWidgetState extends State<AddListWidget> {
 
   _addEventList() async {
     try {
+      final date =
+          "${_date!.year}-${_date!.month.toString().length == 1 ? '0${_date!.month}' : _date!.month}-${_date!.day.toString().length == 1 ? '0${_date!.day}' : _date!.day}";
+      final time = _time!.format(context).toString();
       final data = {
         "event": _eventController.text,
-        "date": _date.toString(),
-        "time": _time.toString(),
+        "date": date,
+        "time": time,
       };
 
-      Response response = await UserAuthentication().postData(data, "event");
+      http.Response response =
+          await UserAuthentication().postData(data, "createEvent");
 
-      final body = await json.decode(response.body);
+      final body = json.decode(response.body);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         log(body.toString());
         if (!mounted) return;
         // If successfully pushed in the backend..
-        Navigator.pop(context);
+        Navigator.pushNamed(context, "/notify");
       } else {
         log("Error from _addEventList");
         const message = "Sorry something went wrong";

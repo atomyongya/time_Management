@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthenticationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EventController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,15 @@ use Illuminate\Support\Facades\Route;
 // Public route
 Route::post("/register", [AuthenticationController::class, "register"]);
 Route::post("/login", [AuthenticationController::class, "login"]);
+Route::get("/getEvent", [EventController::class, "getEvent"]);
+Route::post("/createEvent", [EventController::class, "createEvent"]);
+
+// Private route
+Route::group(['middleware'=>["auth:sanctum"]], function(){
+    // For event
+    // Route::post("/event", [EventController::class, "createEvent"]);
+    // Route::get("/getEvent", [EventController::class, "getEvent"]);
+});
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

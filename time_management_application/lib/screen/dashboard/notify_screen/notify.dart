@@ -1,4 +1,9 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'package:http/http.dart' as http;
 import "package:flutter/material.dart";
+import 'package:time_management_application/api/get_event.dart';
+import 'package:time_management_application/models/event_model.dart';
 import 'package:time_management_application/screen/dashboard/notify_screen/add_list.dart';
 import 'package:time_management_application/utils/colors.dart';
 import 'package:time_management_application/widgets/big_text.dart';
@@ -12,6 +17,23 @@ class NotifyScreen extends StatefulWidget {
 }
 
 class _NotifyScreen extends State<NotifyScreen> {
+  Future _loadData() async {
+    try {
+      http.Response response = await GetEvent().getEvent("getEvent");
+      var jsonData = json.decode(response.body);
+      List<EventModel> eventList = [];
+      final removeDuplicat = eventList.toSet().toList();
+      for (var data in jsonData) {
+        EventModel model =
+            EventModel(data["event"], data["date"], data["time"]);
+        removeDuplicat.add(model);
+      }
+      return removeDuplicat;
+    } catch (error) {
+      log("Error in _loadData\n$error");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,27 +60,36 @@ class _NotifyScreen extends State<NotifyScreen> {
 
               // List of event
               Expanded(
-                child: ListView.builder(
-                  itemCount: 5,
-                  itemBuilder: (context, valueIndex) {
-                    return Column(
-                      children: [
-                        eventDateTime(
-                          "event",
-                          "date",
-                          "time",
-                          color: Colors.lightBlueAccent,
-                          fontSize: 13,
-                          padding: 20,
-                        ),
-                        const SizedBox(height: 10),
-                      ],
-                    );
+                child: FutureBuilder(
+                  future: _loadData(),
+                  builder: (context, AsyncSnapshot snapShot) {
+                    if (snapShot.data == null) {
+                      return const Center(
+                        child: BigTextWidget(text: "Noting to Display"),
+                      );
+                    } else {
+                      return ListView.builder(
+                        itemCount: snapShot.data.length,
+                        itemBuilder: (context, valueIndex) {
+                          return Column(
+                            children: [
+                              eventDateTime(
+                                snapShot.data[valueIndex].event,
+                                snapShot.data[valueIndex].date,
+                                snapShot.data[valueIndex].time,
+                                color: Colors.lightBlueAccent,
+                                fontSize: 13,
+                                padding: 20,
+                              ),
+                              const SizedBox(height: 10),
+                            ],
+                          );
+                        },
+                      );
+                    }
                   },
                 ),
               ),
-
-              
             ],
           ),
         ),
@@ -75,7 +106,7 @@ class _NotifyScreen extends State<NotifyScreen> {
     );
   }
 
-  Container eventDateTime(String event, date, time,
+  Container eventDateTime(event, date, time,
       {double? topLeft,
       double? topRight,
       Color? color,
