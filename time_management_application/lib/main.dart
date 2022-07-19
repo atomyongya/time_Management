@@ -1,3 +1,4 @@
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import "package:flutter/material.dart";
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,8 +12,9 @@ import 'package:time_management_application/screen/otp/otp.dart';
 import 'package:time_management_application/screen/registration/registration.dart';
 import 'package:time_management_application/screen/setting/setting_screen.dart';
 
-void main() {
+void main() async {
   runApp(const TimeManagement());
+  await AndroidAlarmManager.initialize();
 }
 
 class TimeManagement extends StatefulWidget {
