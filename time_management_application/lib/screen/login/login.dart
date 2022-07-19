@@ -64,9 +64,7 @@ class _LoginScreen extends State<LoginScreen> {
     // BuildContext keep track of all widget.
     return Center(
       child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
         appBar: AppBar(
-          backgroundColor: AppColors.backgroundColor,
           automaticallyImplyLeading: false,
           title: const Center(
             child: Text("Time Management"),

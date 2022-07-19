@@ -49,8 +49,9 @@ class _TimeManagement extends State<TimeManagement> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
       title: "Time Management",
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.dark(),
       initialRoute: "/",
       routes: {
         "/": (context) => _initialScreen,

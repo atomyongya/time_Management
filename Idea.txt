@@ -6,3 +6,10 @@ Notify:
     c) list of event should be able to CRUD operation.
 
 (2) Near event should be display on bottom of the home screen.
+
+Day Count
+(1) in 24 hours number of days should include
+(2) Create a day number in top of all 
+
+
+* notify listener => Alaram Feature

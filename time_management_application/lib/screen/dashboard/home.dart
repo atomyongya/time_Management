@@ -40,7 +40,6 @@ class _HomeScreen extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
         child: Column(
           children: [
@@ -50,7 +49,6 @@ class _HomeScreen extends State<HomeScreen> {
               child: Container(
                 width: double.infinity,
                 height: Dimensions.headerHeight,
-                color: AppColors.backgroundColor,
                 padding: EdgeInsets.only(
                     right: Dimensions.paddingAnyLR14,
                     left: Dimensions.paddingAnyLR14),

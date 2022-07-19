@@ -95,6 +95,7 @@ class _NotifyScreen extends State<NotifyScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.lightBlue,
         onPressed: () {
           showDialog(
             context: context,
